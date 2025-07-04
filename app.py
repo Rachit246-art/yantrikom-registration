@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, flash
 import sqlite3
+import os
 
 app = Flask(__name__)
 app.secret_key = 'secret_key'  # For flash messages
@@ -51,13 +52,6 @@ def register():
     return redirect('/')
 
 @app.route('/users')
-# def show_users():
-#     conn = sqlite3.connect('users.db')
-#     cursor = conn.cursor()
-#     cursor.execute("SELECT name, email, year, branch, section, rollno, payment FROM users")
-#     users = cursor.fetchall()
-#     conn.close()
-#     return render_template('users.html', users=users)
 def show_users():
     conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
@@ -66,6 +60,8 @@ def show_users():
     conn.close()
     return render_template('users.html', users=users)
 
+# ✅ For Render Deployment: listen on 0.0.0.0
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
